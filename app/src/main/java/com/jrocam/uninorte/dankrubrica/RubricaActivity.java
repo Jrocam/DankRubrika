@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class RubricaActivity extends AppCompatActivity {
 
     private LinearLayout parentLinearLayout;
@@ -44,6 +47,20 @@ public class RubricaActivity extends AppCompatActivity {
         texto.setText("LO QUE ME DE LA GANA: "+count);
 
         parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+
+        User test = new User("test");
+        test.addExam("Calculo","Exam1","Rubric1");
+        //Add student
+        //test.addStudentToClass("Calculo","Juancho");
+
+        //Add Category to rubric :D
+        //test.addCategoryToRubric("Rubric1","Categoria1",2);
+
+        //Ejemplo agregar elemento a cagegoria
+        //Elemento s = new Elemento(3,"l1","l2","l3","l4");
+        //test.addElementToCategory("Rubric1", "Categoria1", "NombreElemento", s);
+
+
     }
     public void onDelete(View v){
         parentLinearLayout.removeView((View) v.getParent());
