@@ -49,7 +49,8 @@ public class RubricaActivity extends AppCompatActivity {
         parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
 
         User test = new User("test");
-        test.addExam("Calculo","Exam1","Rubric1");
+
+        //Ejemplossss
         //Add student
         //test.addStudentToClass("Calculo","Juancho");
 
