@@ -3,19 +3,21 @@ package com.jrocam.uninorte.dankrubrica;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class RubricaActivity extends AppCompatActivity {
+public class RubricaActivity extends MainActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private LinearLayout parentLinearLayout;
     private int count=0;
-
+    private DrawerLayout mDraverHijo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,21 +35,30 @@ public class RubricaActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        /*mDraverHijo = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this,  mDraverHijo, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDraverHijo.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        sunavigationView.setNavigationItemSelectedListener(this);*/
+
     }
 
 
-    public void onAddField(View v){
+    private void onAddField(View v){
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.list_rubrica_boton, null);
+        final View rowView = inflater.inflate(R.layout.list_rubrica_card, null);
         TextView texto = (TextView) rowView.findViewById(R.id.titulo_rubrica);
         count++;
-        texto.setText("LO QUE ME DE LA GANA: "+count);
+        texto.setText("RUBRICA: "+count);
 
-        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - count);
     }
     public void onDelete(View v){
         parentLinearLayout.removeView((View) v.getParent());
         count--;
     }
-
 }
