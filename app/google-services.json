@@ -1,0 +1,66 @@
+{
+  "project_info": {
+    "project_number": "205186893791",
+    "firebase_url": "https://dankrubrika.firebaseio.com",
+    "project_id": "dankrubrika",
+    "storage_bucket": "dankrubrika.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205186893791:android:aa772fa66e59cc32",
+        "android_client_info": {
+          "package_name": "com.jrocam.uninorte.dankrubrica"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205186893791-8dnveuqfsfki3e3d8a6dsdsnsnfehbcd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jrocam.uninorte.dankrubrica",
+            "certificate_hash": "247c21a38be6598e1f6eabf7e15b8e605c50128e"
+          }
+        },
+        {
+          "client_id": "205186893791-vk2porjp4m5sh903urvdiaqrsln1kpi6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jrocam.uninorte.dankrubrica",
+            "certificate_hash": "929f3f370dcd876a89431b5a6a94eb1e4e6bb643"
+          }
+        },
+        {
+          "client_id": "205186893791-8m4hp2qgo9opaeqv4itd4aanlkih8hcj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARRs2fNjM6paDaXaCRrVHNekmUP0bZExg"
+        },
+        {
+          "current_key": "AIzaSyAn-YuMOCNimsLd9tMRMiJ_QlGRBq4NwZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205186893791-8m4hp2qgo9opaeqv4itd4aanlkih8hcj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
