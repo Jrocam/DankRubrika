@@ -52,7 +52,7 @@ public class RubricaActivity extends AppCompatActivity {
 
         //Ejemplossss
         //Add student
-        //test.addStudentToClass("Calculo","Juancho");
+        //test.addStudentToClass("Algebra","Juanito");
 
         //Add Category to rubric :D
         //test.addCategoryToRubric("Rubric1","Categoria1",2);

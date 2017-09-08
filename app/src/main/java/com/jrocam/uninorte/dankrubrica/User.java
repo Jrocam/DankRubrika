@@ -39,6 +39,13 @@ public class User implements Serializable {
         Examen examen = new Examen(examName, idRubrica);
         myRef.setValue(examen);
     }
+    public void addRubric(String rubricName){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+ rubricName);
+        //Instancia Rubrica
+        Rubrica rubric = new Rubrica(rubricName);
+        myRef.setValue(rubric);
+    }
     public void addCategoryToRubric(String rubricName, String categoryName, int peso){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+ rubricName +"/"+categoryName+"/");
@@ -51,6 +58,5 @@ public class User implements Serializable {
         DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+rubricName+"/"+categoryName+"/"+elementName+"/");
         myRef.setValue(elemento);
     }
-
 }
 
