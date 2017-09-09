@@ -33,6 +33,7 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
     private DrawerLayout mDraverHijo;
     private DatabaseReference myRef;
     private TextView asignaturaText;
+    protected FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +61,17 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
         //FIREBASE
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         setAsignaturas();
     }
 
-    public void onAsignatura(View view) {
+    public void onAsignatura(View v) {
 
-        startActivity(new Intent(this,SelectAsignaturaActivity.class));
+        TextView texto = (TextView) v.findViewById(R.id.titulo_asignatura);
+        Intent i = new Intent(this,SelectAsignaturaActivity.class);
+        Log.d("Msg", "ASIIiIII: " + texto.getText().toString());
+        i.putExtra("asignatura", texto.getText().toString() );
+        startActivity(i);
 
     }
 
@@ -87,6 +91,8 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //clear asignaturas
+                parentLinearLayout.removeAllViews();
                 //many stuff, obteniendo materias de un user
                 for (DataSnapshot postSnapshot: dataSnapshot.child("users").child("test").child("class").getChildren()) {
                     // TODO: handle the post
@@ -121,13 +127,11 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        final View rowView = inflater.inflate(R.layout.list_asignatura_card, null);
-                        asignaturaText = (TextView) rowView.findViewById(R.id.titulo_asignatura);
-                        count++;
-                        asignaturaText.setText(editText.getText());
-                        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - count);
+                    public void onClick(DialogInterface dialog, int id) {;
+
+                        User usr = new User("test");
+                        usr.addNewClass(asignaturaText.getText().toString());
+
                     }
                 })
                 .setNegativeButton("Cancelar",
