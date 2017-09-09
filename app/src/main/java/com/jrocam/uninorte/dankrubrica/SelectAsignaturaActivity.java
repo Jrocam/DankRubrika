@@ -56,6 +56,8 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
     public String asignatura;
     public String[] alumnos = {"sin alumnos"};
     public String[] examenes = {"sin examenes"};
+    public Fragment frag_asignaturas;
+    public Fragment frag_examenes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,33 +69,22 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         Intent i = getIntent();
         asignatura = i.getStringExtra("asignatura");
         setAlumnosExamenes(asignatura);
+
         Log.d("Msg", "NOMBRE?: " + asignatura);
 
         setTitle(asignatura);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 
-;
+    }
 
-        //TestClass testObject = (TestClass) i.getSerializableExtra("testObject");
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
-        //ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_listview, alumnos);
-        //ListView listView = (ListView) findViewById(R.id.alumnos_lista);
-        //listView.setAdapter(adapter);
-
+    public void addToAsignatura(View v){
+        super.usr.addStudentToClass(asignatura,"Carolino");
+        Snackbar.make(v, "Agregado Manolito", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
     public void setAlumnosExamenes(final String name){
         //Constant Data retriever from firebase
@@ -102,12 +93,14 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //clear asignaturas
 
+                //examenes=null;
                 //obteniendo alumnos de una asignatura
                 Map<String, Object> value = (Map<String, Object>) dataSnapshot.child("users").child("test").child("class").child(name).child("roster").getValue();
                 if (value != null) {
                     Object[] alum = value.values().toArray();
                     alumnos = Arrays.copyOf(alum, alum.length, String[].class);
-                    //Here you do your thang
+
+                    //INFLATER HERE
                     for (int i = 0; i < alumnos.length; i++) {
 
                         Log.d("Msg", "Value is: " + alumnos[i]);
@@ -126,16 +119,20 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
                 }
                 // Create the adapter that will return a fragment for each of the three
                 // primary sections of the activity.
+                if (mSectionsPagerAdapter == null){
+                    mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                    // Set up the ViewPager with the sections adapter.
+                    mViewPager = (ViewPager) findViewById(R.id.container);
+                    mViewPager.setAdapter(mSectionsPagerAdapter);
 
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+                    tabLayout.setupWithViewPager(mViewPager);
+                }else{
+                    // Set up the ViewPager with the sections adapter.
 
-                // Set up the ViewPager with the sections adapter.
-                mViewPager = (ViewPager) findViewById(R.id.container);
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-                tabLayout.setupWithViewPager(mViewPager);
-
+                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+                    tabLayout.setupWithViewPager(mViewPager);
+                }
 
             }
 
@@ -204,8 +201,8 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_select_asignatura, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
             ListView listView = (ListView) rootView.findViewById(R.id.alumnos_lista);
             Log.d("MENSAJE!", " MENU ES: " + Arrays.toString(menuItems));
@@ -233,13 +230,15 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment p;
+
             if (position==0){
-                p = PlaceholderFragment.newInstance(position+1, alumnos);
+                frag_asignaturas = PlaceholderFragment.newInstance(position+1, alumnos);
+                return frag_asignaturas;
             }else{
-                p = PlaceholderFragment.newInstance(position+1, examenes);
+                frag_examenes = PlaceholderFragment.newInstance(position+1, examenes);
+                return frag_examenes;
             }
-            return p;
+
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             //return PlaceholderFragment.newInstance(position + 1, alumnos);

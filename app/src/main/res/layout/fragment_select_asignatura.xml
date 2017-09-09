@@ -1,22 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
-
-    <Button
-        android:id="@+id/btnAñadir"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Añadir" />
-
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
     <ListView
         android:id="@+id/alumnos_lista"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="none" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="15dp"
+        android:clickable="true"
+        android:onClick="addToAsignatura"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:tint="#FFFF"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_add_person" />
+
+</android.support.design.widget.CoordinatorLayout>
+

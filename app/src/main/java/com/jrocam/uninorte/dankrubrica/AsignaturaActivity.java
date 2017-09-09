@@ -34,6 +34,7 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
     private DatabaseReference myRef;
     private TextView asignaturaText;
     protected FirebaseDatabase database = FirebaseDatabase.getInstance();
+    User usr = new User("test");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +130,7 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {;
 
-                        User usr = new User("test");
-                        usr.addNewClass(asignaturaText.getText().toString());
+                        usr.addNewClass(editText.getText().toString());
 
                     }
                 })
