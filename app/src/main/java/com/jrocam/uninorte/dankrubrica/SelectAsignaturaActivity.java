@@ -1,11 +1,13 @@
 package com.jrocam.uninorte.dankrubrica;
 
 import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -80,12 +83,62 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
 
 
     }
+    public void addSomething(View v){
+        FloatingActionButton f = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
+        Log.d("Msg", "ENTRA??: ");
+        if(frag_asignaturas.isVisible()){
+            Log.d("Msg", "ASIGNATURA VISIBLE: "+ f.getId());
+        }
+        if(frag_examenes.isVisible()){
+            Log.d("Msg", "EXAMENES VISIBLE: "+ f.getId());
+        }
 
+        //addToAsignatura(v);
+        //addToExams(v);
+    }
     public void addToAsignatura(View v){
-        super.usr.addStudentToClass(asignatura,"Carolino");
-        Snackbar.make(v, "Agregado Manolito", Snackbar.LENGTH_LONG)
+        dialogAlumno(v);
+        Snackbar.make(v, "Estudiante agregado", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
+    protected void dialogAlumno(View v) {
+
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(SelectAsignaturaActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input_alumno, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectAsignaturaActivity.this);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {;
+                        usr.addStudentToClass(asignatura,editText.getText().toString());
+                        ListView lista = (ListView) findViewById(R.id.alumnos_lista);
+
+                    }
+                })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+    public void addToExams(View v){
+        super.usr.addExam(asignatura,"Exam1","Rubrica1");
+        Snackbar.make(v, "Agregado Exam1", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        ListView list = (ListView) findViewById(R.id.alumnos_lista);
+        Log.d("Msg", "LISTA EN 0: "+ list.getChildAt(0));
+    }
+
+
     public void setAlumnosExamenes(final String name){
         //Constant Data retriever from firebase
         myRef.addValueEventListener(new ValueEventListener() {
@@ -113,7 +166,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
                     examenes = Arrays.copyOf(exam, exam.length, String[].class);
                     //Here you do your thang
                     for (int i = 0; i < examenes.length; i++) {
-
                         Log.d("Msg", "Value is: " + examenes[i]);
                     }
                 }
@@ -227,7 +279,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
 

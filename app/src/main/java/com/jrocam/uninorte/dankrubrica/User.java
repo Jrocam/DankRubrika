@@ -34,10 +34,10 @@ public class User implements Serializable {
     }
     public void addExam(String className, String examName, String idRubrica){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users/"+this.username+"/class/"+ className +"/exams/"+examName);
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/class/"+ className + "/exams");
         //Instancia Examen
         Examen examen = new Examen(examName, idRubrica);
-        myRef.setValue(examen);
+        myRef.child(examName).setValue(idRubrica);
     }
     public void addRubric(String rubricName){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
