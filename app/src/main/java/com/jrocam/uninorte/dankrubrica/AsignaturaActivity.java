@@ -48,8 +48,6 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
             @Override
             public void onClick(View view) {
                 onAddField(view);
-                Snackbar.make(view, "Añadida nueva asignatura.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
         mDraverHijo = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,9 +74,9 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
 
     }
 
-    private void onAddField(View v){
+    public void onAddField(View v){
         //crea un dialogo y lo muestra en pantalla
-        showInputDialog();
+        showInputDialog(v);
 
         //añade al layout la nueva asignatura si apretó OK
 
@@ -116,7 +114,7 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
             }
         });
     }
-    protected void showInputDialog() {
+    protected void showInputDialog(final View v) {
 
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(AsignaturaActivity.this);
@@ -129,9 +127,9 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {;
-
                         usr.addNewClass(editText.getText().toString());
-
+                        Snackbar.make(v, "Añadida nueva asignatura.", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                     }
                 })
                 .setNegativeButton("Cancelar",

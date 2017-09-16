@@ -36,7 +36,7 @@ public class User implements Serializable {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/"+this.username+"/class/"+ className + "/exams");
         //Instancia Examen
-        Examen examen = new Examen(examName, idRubrica);
+        //Examen examen = new Examen(examName, idRubrica);
         myRef.child(examName).setValue(idRubrica);
     }
     public void addRubric(String rubricName){

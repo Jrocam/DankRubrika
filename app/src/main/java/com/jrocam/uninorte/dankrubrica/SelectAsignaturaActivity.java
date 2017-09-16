@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -22,7 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,12 +35,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
 import java.util.Map;
-import java.util.logging.Handler;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.zip.ZipFile;
+
+import static android.support.v7.widget.RecyclerView.*;
+
 
 public class SelectAsignaturaActivity extends AsignaturaActivity {
 
@@ -79,66 +85,7 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
     }
-    public void addSomething(View v){
-        FloatingActionButton f = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
-        Log.d("Msg", "ENTRA??: ");
-        if(frag_asignaturas.isVisible()){
-            Log.d("Msg", "ASIGNATURA VISIBLE: "+ f.getId());
-        }
-        if(frag_examenes.isVisible()){
-            Log.d("Msg", "EXAMENES VISIBLE: "+ f.getId());
-        }
-
-        //addToAsignatura(v);
-        //addToExams(v);
-    }
-    public void addToAsignatura(View v){
-        dialogAlumno(v);
-        Snackbar.make(v, "Estudiante agregado", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-    }
-    protected void dialogAlumno(View v) {
-
-        // get prompts.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(SelectAsignaturaActivity.this);
-        View promptView = layoutInflater.inflate(R.layout.input_alumno, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectAsignaturaActivity.this);
-        alertDialogBuilder.setView(promptView);
-
-        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
-        // setup a dialog window
-        alertDialogBuilder.setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {;
-                        usr.addStudentToClass(asignatura,editText.getText().toString());
-                        ListView lista = (ListView) findViewById(R.id.alumnos_lista);
-
-                    }
-                })
-                .setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-        // create an alert dialog
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
-    }
-    public void addToExams(View v){
-        super.usr.addExam(asignatura,"Exam1","Rubrica1");
-        Snackbar.make(v, "Agregado Exam1", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        ListView list = (ListView) findViewById(R.id.alumnos_lista);
-        Log.d("Msg", "LISTA EN 0: "+ list.getChildAt(0));
-    }
-
-
     public void setAlumnosExamenes(final String name){
         //Constant Data retriever from firebase
         myRef.addValueEventListener(new ValueEventListener() {
@@ -155,15 +102,15 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
 
                     //INFLATER HERE
                     for (int i = 0; i < alumnos.length; i++) {
-
                         Log.d("Msg", "Value is: " + alumnos[i]);
                     }
                 }
                 //obteniendo examenes de una asignatura
                 Map<String, Object> valueEx = (Map<String, Object>) dataSnapshot.child("users").child("test").child("class").child(name).child("exams").getValue();
                 if (valueEx != null) {
+                    Object[] keys = valueEx.keySet().toArray();
                     Object[] exam = valueEx.values().toArray();
-                    examenes = Arrays.copyOf(exam, exam.length, String[].class);
+                    examenes = Arrays.copyOf(keys, keys.length, String[].class);
                     //Here you do your thang
                     for (int i = 0; i < examenes.length; i++) {
                         Log.d("Msg", "Value is: " + examenes[i]);
@@ -181,11 +128,17 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
                     tabLayout.setupWithViewPager(mViewPager);
                 }else{
                     // Set up the ViewPager with the sections adapter.
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            // this code will be executed after 2 seconds
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
 
-                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-                    tabLayout.setupWithViewPager(mViewPager);
+                        }
+                    }, 2000);
                 }
-
             }
 
             @Override
@@ -195,7 +148,7 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
             }
         });
     }
-
+;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -214,7 +167,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     /**
@@ -225,28 +177,93 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
+        private DatabaseReference myRef;
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static final String ARG_ALUMNOS = "alumnos_list";
+        private static final String ARG_ASIGNATURA = "asignatura_name";
         private String[] menuItems;
+        private int position;
+        public String asigna;
         public PlaceholderFragment(){
         }
-
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static Fragment newInstance(int sectionNumber, String[] alu) {
+        public static Fragment newInstance(int sectionNumber, String[] alu, String asig) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             args.putStringArray(ARG_ALUMNOS,alu);
+            args.putString(ARG_ASIGNATURA,asig);
             fragment.setArguments(args);
             return fragment;
+        }
+        protected void dialogAlumno(final View v) {
+
+            // get prompts.xml view
+            LayoutInflater layoutInflater = LayoutInflater.from(this.getContext());
+            View promptView = layoutInflater.inflate(R.layout.input_alumno, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+            alertDialogBuilder.setView(promptView);
+
+            final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+            // setup a dialog window
+            alertDialogBuilder.setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            User usr = new User("test");
+                            usr.addStudentToClass(asigna,editText.getText().toString());
+                            Snackbar.make(v, "Añadido alumno.", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    })
+                    .setNegativeButton("Cancelar",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            // create an alert dialog
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+        }
+        protected void dialogExamen(final View v) {
+
+            // get prompts.xml view
+            LayoutInflater layoutInflater = LayoutInflater.from(this.getContext());
+            View promptView = layoutInflater.inflate(R.layout.input_examen, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+            alertDialogBuilder.setView(promptView);
+
+            final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+            // setup a dialog window
+            alertDialogBuilder.setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            User usr = new User("test");
+                            usr.addExam(asigna,editText.getText().toString(),"rub1");
+                            Snackbar.make(v, "Añadido examen.", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    })
+                    .setNegativeButton("Cancelar",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            // create an alert dialog
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
         }
         @Override
         public void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
             menuItems = getArguments().getStringArray(ARG_ALUMNOS);
+            position = getArguments().getInt(ARG_SECTION_NUMBER);
+            asigna = getArguments().getString(ARG_ASIGNATURA);
         }
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -259,13 +276,55 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
             ListView listView = (ListView) rootView.findViewById(R.id.alumnos_lista);
             Log.d("MENSAJE!", " MENU ES: " + Arrays.toString(menuItems));
             if(menuItems != null){
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                BaseAdapter adapter = new ArrayAdapter<String>(
                         getActivity(),
-                        android.R.layout.simple_list_item_1,
+                        android.R.layout.simple_list_item_2,
+                        android.R.id.text1,
                         menuItems
-                );
+
+                ){  @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View view = super.getView(position, convertView, parent);
+
+                        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+
+                        text1.setText(menuItems[position]);
+                        text2.setText(menuItems[position]);
+                        return view;
+                    }
+                };
+
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d("MENSAJE!", "CLICKED: ");
+                    }
+
+                });
             }
+            if (position == 0){
+                FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton2);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogAlumno(view);
+                    }
+                });
+            }
+            if (position == 1){
+                FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton2);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogExamen(view);
+                    }
+                });
+            }
+
             return rootView;
         }
     }
@@ -283,13 +342,12 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         public Fragment getItem(int position) {
 
             if (position==0){
-                frag_asignaturas = PlaceholderFragment.newInstance(position+1, alumnos);
+                frag_asignaturas = PlaceholderFragment.newInstance(position, alumnos,asignatura);
                 return frag_asignaturas;
             }else{
-                frag_examenes = PlaceholderFragment.newInstance(position+1, examenes);
+                frag_examenes = PlaceholderFragment.newInstance(position, examenes,asignatura);
                 return frag_examenes;
             }
-
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             //return PlaceholderFragment.newInstance(position + 1, alumnos);
