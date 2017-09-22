@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.jrocam.uninorte.dankrubrica.SelectAsignaturaActivity">
+    tools:context="com.jrocam.uninorte.dankrubrica.SelectRubricaActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Do you even"
+        android:title="Nope??"
         app:showAsAction="never" />
 </menu>

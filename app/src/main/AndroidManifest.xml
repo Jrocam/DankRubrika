@@ -35,6 +35,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jrocam.uninorte.dankrubrica.AsignaturaActivity" />
         </activity>
+        <activity
+            android:name=".SelectRubricaActivity"
+            android:label="@string/title_activity_select_rubrica"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

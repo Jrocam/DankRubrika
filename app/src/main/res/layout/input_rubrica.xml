@@ -5,32 +5,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp">
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Nombre del examen:"
+        android:text="Nombre Rúbrica:"
         android:id="@+id/textView" />
 
     <EditText
         android:id="@+id/edittext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Examen 1° corte"
+        android:hint="Parcial IV ..."
         android:padding="10dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Escoger rúbrica"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-
 </LinearLayout>

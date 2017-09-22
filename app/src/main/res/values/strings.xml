@@ -98,4 +98,5 @@
     <string name="title_activity_asignatura">AsignaturaActivity</string>
     <string name="title_activity_select_asignatura">SelectAsignaturaActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_select_rubrica">SelectRubricaActivity</string>
 </resources>

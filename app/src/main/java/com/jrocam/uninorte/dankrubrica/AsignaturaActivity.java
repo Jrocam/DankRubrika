@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +33,9 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
     private int count=0;
     private DrawerLayout mDraverHijo;
     private DatabaseReference myRef;
-    private TextView asignaturaText;
     protected FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private ProgressBar spinner;
+
     User usr = new User("test");
 
     @Override
@@ -42,6 +44,9 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         setContentView(R.layout.activity_asignatura);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        spinner = (ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
         parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,13 +70,11 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
     }
 
     public void onAsignatura(View v) {
-
         TextView texto = (TextView) v.findViewById(R.id.titulo_asignatura);
         Intent i = new Intent(this,SelectAsignaturaActivity.class);
         Log.d("Msg", "ASIIiIII: " + texto.getText().toString());
         i.putExtra("asignatura", texto.getText().toString() );
         startActivity(i);
-
     }
 
     public void onAddField(View v){
@@ -96,7 +99,6 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
                 for (DataSnapshot postSnapshot: dataSnapshot.child("users").child("test").child("class").getChildren()) {
                     // TODO: handle the post
                     Map<String, Object> v = (Map<String, Object>) postSnapshot.getValue();
-
                     //Put shit on components. yea boi. that's right
                     Log.d("Msg", "VALUUEEEE is: " + v.get("name"));
                     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -104,9 +106,10 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
                     TextView texto = (TextView) rowView.findViewById(R.id.titulo_asignatura);
                     count++;
                     texto.setText(v.get("name").toString());
-                    parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - count);                }
+                    parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - count);
+                }
+                spinner.setVisibility(View.GONE);
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
@@ -115,7 +118,6 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         });
     }
     protected void showInputDialog(final View v) {
-
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(AsignaturaActivity.this);
         View promptView = layoutInflater.inflate(R.layout.input_asignatura, null);
