@@ -38,6 +38,10 @@
         <activity
             android:name=".SelectRubricaActivity"
             android:label="@string/title_activity_select_rubrica"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SelectCategoriasActivity"
+            android:label="@string/title_activity_select_categorias"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

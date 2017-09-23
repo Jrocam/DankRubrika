@@ -74,13 +74,12 @@ public class RubricaActivity extends MainActivity implements NavigationView.OnNa
         //FIREBASE
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        setRubrics();
+        getRubrics();
     }
 
     public void onRubrica(View v) {
         TextView texto = (TextView) v.findViewById(R.id.titulo_rubrica);
         Intent r = new Intent(this,SelectRubricaActivity.class);
-        Log.d("Msg", "ASIIiIII: " + texto.getText().toString());
         r.putExtra("rubrica", texto.getText().toString() );
         startActivity(r);
     }
@@ -99,7 +98,7 @@ public class RubricaActivity extends MainActivity implements NavigationView.OnNa
         parentLinearLayout.removeView((View) v.getParent());
         count--;
     }
-    public void setRubrics(){
+    public void getRubrics(){
         //Constant Data retriever from firebase
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -110,7 +109,6 @@ public class RubricaActivity extends MainActivity implements NavigationView.OnNa
                 for (DataSnapshot postSnapshot: dataSnapshot.child("users").child("test").child("rubrics").getChildren()) {
                     // TODO: handle the post
                     Map<String, Object> v = (Map<String, Object>) postSnapshot.getValue();
-
                     //Put shit on components. yea boi. that's right
                     Log.d("Msg", "VALUUEEEE is: " + v.get("name"));
                     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

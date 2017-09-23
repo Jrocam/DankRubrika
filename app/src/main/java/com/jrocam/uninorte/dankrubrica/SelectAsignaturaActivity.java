@@ -268,7 +268,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
             alert.show();
         }
         protected void dialogExamen(final View v) {
-
             // get prompts.xml view
             LayoutInflater layoutInflater = LayoutInflater.from(this.getContext());
             View promptView = layoutInflater.inflate(R.layout.input_examen, null);
@@ -389,7 +388,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
                     }
                 });
             }
-
             return rootView;
         }
     }
@@ -417,7 +415,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             //return PlaceholderFragment.newInstance(position + 1, alumnos);
         }
-
         @Override
         public int getCount() {
             // Show 2 total pages.

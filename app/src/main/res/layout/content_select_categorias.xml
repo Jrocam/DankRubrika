@@ -6,10 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.jrocam.uninorte.dankrubrica.SelectRubricaActivity"
-    tools:showIn="@layout/activity_select_rubrica">
-
+    tools:context="com.jrocam.uninorte.dankrubrica.SelectCategoriasActivity"
+    tools:showIn="@layout/activity_select_categorias">
 
 </LinearLayout>

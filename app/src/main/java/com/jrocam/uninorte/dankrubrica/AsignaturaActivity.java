@@ -145,5 +145,4 @@ public class AsignaturaActivity extends MainActivity implements NavigationView.O
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
-
 }
