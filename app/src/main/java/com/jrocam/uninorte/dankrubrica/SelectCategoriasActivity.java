@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -36,6 +37,9 @@ public class SelectCategoriasActivity extends AppCompatActivity {
     private int sumapesos;
     private int maxpeso=100;
     private ArrayList<ArrayList<String>> Niveles = new ArrayList<>();
+    private ArrayList<String> elementos = new ArrayList<>();
+    private ArrayList<String> pesos = new ArrayList<>();
+    private ArrayList<String> descripciones = new ArrayList<>();
 
     User usr = new User("test");
     @Override
@@ -90,17 +94,20 @@ public class SelectCategoriasActivity extends AppCompatActivity {
                 Niveles = new ArrayList<ArrayList<String>>();
                 parentLinearLayout3.removeAllViews();
                 sumapesos = 0;
+                count = 0;
+                elementos = new ArrayList<>();
+                pesos = new ArrayList<>();
+                descripciones = new ArrayList<>();
                 //many stuff, obteniendo materias de un user
                 ArrayList<String> l = new ArrayList<String>();;
                 for (DataSnapshot postSnapshot: dataSnapshot.child("users").child("test").child("rubrics").child(rubrica).child(categoria).getChildren()){
                     // TODO: handle the post
-                    l = new ArrayList<String>();
+
                     String elem = postSnapshot.getKey();
                     if (!elem.equals("peso")){
                         //Put shit on components. yea boi. that's right
                         Map<String, Object> v = (Map<String, Object>) postSnapshot.getValue();
-                        Log.d("Msg", "ELEMENTOS is: " + elem);
-                        Log.d("Msg", "peso is: " + v.get("peso"));
+                        l = new ArrayList<String>();
                         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         final View rowView = inflater.inflate(R.layout.list_elementos, null);
                         TextView texto = (TextView) rowView.findViewById(R.id.ele_name);
@@ -113,15 +120,18 @@ public class SelectCategoriasActivity extends AppCompatActivity {
                         l.add(v.get("l4").toString());
                         Niveles.add(l);
                         texto.setText(elem);
+                        elementos.add(elem);
                         peso.setText(v.get("peso").toString()+" %");
+                        pesos.add(v.get("peso").toString());
                         descrip.setText("- "+v.get("descripcion").toString());
+                        descripciones.add(v.get("descripcion").toString());
                         sumapesos = sumapesos + Integer.parseInt(v.get("peso").toString());
                         parentLinearLayout3.addView(rowView,parentLinearLayout3.getChildCount() - count);
                     }
-                    Niveles.add(l);
                 }
 
-                Log.d("Msg", "NIVELES IS: " + Niveles);
+                Log.d("Msg", "NIVELES IS: "+count+" " + Niveles);
+                Log.d("Msg", "ELEMENTOS IS: " + elementos);
                 Log.d("Msg", "SUMAPESOS IS: " + sumapesos);
                 getSupportActionBar().setTitle(categoria+"  ["+sumapesos+"/"+maxpeso+"]%");
             }
@@ -142,6 +152,19 @@ public class SelectCategoriasActivity extends AppCompatActivity {
     }
     protected void editElementoDialog(final View v) {
         // get prompts.xml view
+        TextView nombre = (TextView) v.findViewById(R.id.ele_name);
+        int positionElemento=0;
+        for (int i=0;i < elementos.size();i++){
+            if (nombre.getText().toString().equals(elementos.get(i))){
+                positionElemento = i;
+                break;
+            }
+        }
+        final String elementoSelect = elementos.get(positionElemento);
+        final String pesoElementoSelect = pesos.get(positionElemento);
+        final String descElementoSelect = descripciones.get(positionElemento);
+        Log.d("Msg", "POSITIONELEMENTO IS: " + positionElemento);
+        ArrayList<String> e = Niveles.get(positionElemento);
         LayoutInflater layoutInflater = LayoutInflater.from(SelectCategoriasActivity.this);
         View promptView = layoutInflater.inflate(R.layout.dialog_levels, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectCategoriasActivity.this);
@@ -150,16 +173,21 @@ public class SelectCategoriasActivity extends AppCompatActivity {
         final EditText editText2 = (EditText) promptView.findViewById(R.id.edittext2);
         final EditText editText3 = (EditText) promptView.findViewById(R.id.edittext3);
         final EditText editText4 = (EditText) promptView.findViewById(R.id.edittext4);
-        //editText1.setText();
-        //editText2.setText();
-        //editText3.setText();
-        //editText4.setText();
+        editText1.setText(e.get(0));
+        editText2.setText(e.get(1));
+        editText3.setText(e.get(2));
+        editText4.setText(e.get(3));
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {;
-                        //usr.addRubric(editText.getText().toString());
-                        Snackbar.make(v, "Añadido nuevo elemento.", Snackbar.LENGTH_LONG)
+                        Elemento eleme = new Elemento(pesoElementoSelect,descElementoSelect,
+                                editText1.getText().toString(),
+                                editText2.getText().toString(),
+                                editText3.getText().toString(),
+                                editText4.getText().toString());
+                        usr.addElementToCategory(rubrica,categoria,elementoSelect,eleme);
+                        Snackbar.make(v, "Se ha editado el elemento.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 })
