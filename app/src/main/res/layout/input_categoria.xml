@@ -14,7 +14,7 @@
         android:fontFamily="sans-serif-smallcaps"
 
         android:paddingLeft="8dp"
-        android:text="Agregar alumno"
+        android:text="Añadir categoría"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -40,8 +40,28 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
-        android:hint="John Doe.." />
+        android:hint="Contenido.." />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:text="Peso ( % )"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="128dp"
+        android:layout_marginRight="128dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:hint="45.."/>
 
 
 </LinearLayout>

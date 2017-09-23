@@ -5,9 +5,9 @@ package com.jrocam.uninorte.dankrubrica;
  */
 
 public class Categoria {
-    public int peso;
+    public String peso;
 
-    public Categoria(int peso){
+    public Categoria(String peso){
         this.peso = peso;
     }
 }

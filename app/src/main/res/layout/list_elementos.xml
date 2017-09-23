@@ -14,6 +14,7 @@
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:visibility="visible"
+        android:onClick="onElementos"
         app:cardElevation="1dp"
         app:cardUseCompatPadding="true">
 
@@ -27,19 +28,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.40"
-                android:orientation="vertical"
-                android:weightSum="1">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/ele_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.50"
+                    android:layout_weight="1"
                     android:elegantTextHeight="true"
                     android:paddingBottom="4dp"
                     android:paddingTop="8dp"
                     android:text="TextView"
-                    android:textAlignment="center"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="2dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -47,13 +48,12 @@
                     android:id="@+id/ele_descrip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.50"
+                    android:layout_weight="1"
                     android:elegantTextHeight="true"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="2dp"
                     android:text="TextView"
-                    android:textAlignment="center"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -61,10 +61,8 @@
                 android:id="@+id/ele_peso"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.90"
+                android:layout_weight="0.60"
                 android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingTop="10dp"
                 android:text="TextView"
                 android:textAlignment="center" />
 

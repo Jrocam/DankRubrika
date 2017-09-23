@@ -46,7 +46,7 @@ public class User implements Serializable {
         Rubrica rubric = new Rubrica(rubricName);
         myRef.setValue(rubric);
     }
-    public void addCategoryToRubric(String rubricName, String categoryName, int peso){
+    public void addCategoryToRubric(String rubricName, String categoryName, String peso){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+ rubricName +"/"+categoryName+"/");
         //Instancia Categoria

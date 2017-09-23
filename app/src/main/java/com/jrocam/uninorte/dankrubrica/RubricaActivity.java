@@ -47,8 +47,10 @@ public class RubricaActivity extends MainActivity implements NavigationView.OnNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rubrica);
+        setTitle("Rúbricas");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);
         spinner2 = (ProgressBar)findViewById(R.id.progressBar2);
         spinner2.setVisibility(View.VISIBLE);
@@ -76,22 +78,13 @@ public class RubricaActivity extends MainActivity implements NavigationView.OnNa
         myRef = database.getReference();
         getRubrics();
     }
-
     public void onRubrica(View v) {
         TextView texto = (TextView) v.findViewById(R.id.titulo_rubrica);
         Intent r = new Intent(this,SelectRubricaActivity.class);
         r.putExtra("rubrica", texto.getText().toString() );
         startActivity(r);
     }
-
-
     private void onAddField(View v){
-        /*LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.list_rubrica_card, null);
-        TextView texto = (TextView) rowView.findViewById(R.id.titulo_rubrica);
-        count++;
-        texto.setText("RUBRICA: "+ count);
-        parentLinearLayout.addView(rowView, count);*/
         addRubricaDialog(v);
     }
     public void onDelete(View v){

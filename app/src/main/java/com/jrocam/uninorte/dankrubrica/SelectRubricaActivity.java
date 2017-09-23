@@ -1,10 +1,12 @@
 package com.jrocam.uninorte.dankrubrica;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ public class SelectRubricaActivity extends RubricaActivity {
     private LinearLayout parentLinearLayout2;
     private DatabaseReference myRef;
     private int count=0;
+    private int sumapesos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +67,12 @@ public class SelectRubricaActivity extends RubricaActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (sumapesos < 100){
+                    onAddCategoria(view);
+                }else{
+                    Snackbar.make(view, "Peso no puede ser mayor a 100%", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
     }
@@ -80,7 +88,6 @@ public class SelectRubricaActivity extends RubricaActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -94,6 +101,7 @@ public class SelectRubricaActivity extends RubricaActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //REMOVE ALL
                 parentLinearLayout2.removeAllViews();
+                sumapesos = 0;
                 //many stuff, obteniendo materias de un user
                 for (DataSnapshot postSnapshot: dataSnapshot.child("users").child("test").child("rubrics").child(rubrica).getChildren()){
                     // TODO: handle the post
@@ -110,10 +118,12 @@ public class SelectRubricaActivity extends RubricaActivity {
                         count++;
                         texto.setText(categ);
                         peso.setText(v.get("peso").toString()+" %");
+                        sumapesos = sumapesos + Integer.parseInt(v.get("peso").toString());
                         parentLinearLayout2.addView(rowView,parentLinearLayout2.getChildCount() - count);
                     }
                 }
-                //spinner2.setVisibility(View.GONE);
+                Log.d("Msg", "SUMAPESOS IS: " + sumapesos);
+                getSupportActionBar().setTitle(rubrica+"  ["+sumapesos+"/"+100+"]%");
             }
 
             @Override
@@ -131,5 +141,47 @@ public class SelectRubricaActivity extends RubricaActivity {
         r.putExtra("porcentaje", porce.getText().toString() );
         r.putExtra("rubrica", rubrica);
         startActivity(r);
+    }
+    public void onAddCategoria(View v){
+        addCategoriaDialog(v);
+    }
+    public void addCategoriaDialog(final View v){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(SelectRubricaActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input_categoria, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectRubricaActivity.this);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        final EditText editNum = (EditText) promptView.findViewById(R.id.editNumber);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {;
+                        try{
+                            sumapesos = sumapesos + Integer.parseInt(editNum.getText().toString());
+                        }catch(Error e){}
+                        if (sumapesos < 100){
+                            usr.addCategoryToRubric(rubrica,editText.getText().toString(),editNum.getText().toString());
+                            Snackbar.make(v, "Añadida nueva categoría", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                        else{
+                            sumapesos = sumapesos - Integer.parseInt(editNum.getText().toString());
+                            Snackbar.make(v, "Peso mayor a 100%", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }
