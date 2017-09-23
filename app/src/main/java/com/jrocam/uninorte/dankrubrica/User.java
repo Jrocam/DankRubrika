@@ -58,5 +58,10 @@ public class User implements Serializable {
         DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+rubricName+"/"+categoryName+"/"+elementName+"/");
         myRef.setValue(elemento);
     }
+    public void gradeStudent( String className, String exam, String student, String grade){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/class/"+className+"/grades/"+exam);
+        myRef.child(student).setValue(grade);
+    }
 }
 

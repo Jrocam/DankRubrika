@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
      */
     private ViewPager mViewPager;
     private DatabaseReference myRef;
+    private static DatabaseReference myRef2;
     public String asignatura;
     public String[] alumnos = {"sin alumnos"};
     public String[] examenes = {"sin examenes"};
@@ -90,6 +92,10 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //FIREBASE
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef2 = database.getReference();
 
     }
     @Override
@@ -333,7 +339,8 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Log.d("MENSAJE!", "CLICKED: ");
+                            Log.d("MENSAJE!", "CLICKED: " + menuItems[position]);
+                            studentGradeDialog(menuItems[position], "Algebra");
                         }
 
                     });
@@ -391,6 +398,44 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
             }
 
             return rootView;
+        }
+
+        //Generate Students Grades Dialog
+        public void studentGradeDialog(final String name, final String clase){
+            /* //Grading test
+            User usr = new User("test");
+            usr.gradeStudent("Algebra","Exam 1","Mateo","2");
+             */
+            //Get Grades
+            final ArrayList<String> items = new ArrayList<String>();
+            myRef2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot: dataSnapshot.child("users").child("test").child("class").child(clase).child("grades").getChildren()) {
+                        // TODO: handle the post
+                        Map<String, Object> v = (Map<String, Object>) postSnapshot.getValue();
+                        Log.d("Msg", "GRADES is: " + v + "   MAYBE KEY: "+ postSnapshot.getKey());
+                        items.add(postSnapshot.getKey() + ": " + v.get(name));
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Notas de "+name);
+                    builder.setItems(items.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            // Do something with the selection. lol nothing, ok?
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.d("Msg", "Failed to read value.", error.toException());
+                }
+            });
         }
     }
 
