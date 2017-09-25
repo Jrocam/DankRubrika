@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -76,7 +79,7 @@ public class SelectCategoriasActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (sumapesos < maxpeso){
+                if (sumapesos <= maxpeso){
                     addElementoDialog(view);
                 }else{
                     Snackbar.make(view, "Peso no puede ser mayor a "+maxpeso+"%", Snackbar.LENGTH_LONG)
@@ -144,13 +147,37 @@ public class SelectCategoriasActivity extends AppCompatActivity {
         });
     }
     public void onElementos(View v){
-        editElementoDialog(v);
+        nivelesElementoDialog(v);
     }
-    public void onDelete(View v){
-        parentLinearLayout3.removeView((View) v.getParent());
-        count--;
+    public void onDelete(final View v){
+        LayoutInflater layoutInflater = LayoutInflater.from(SelectCategoriasActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input_alerta, null);
+        LinearLayout vi = (LinearLayout) v.getParent().getParent();
+        TextView elem = (TextView) vi.findViewById(R.id.ele_name);
+        final String elementoEli = elem.getText().toString();
+        Log.d("Msg", "Elemento SELECT IS: " + elementoEli);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectCategoriasActivity.this);
+        alertDialogBuilder.setView(promptView);
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {;
+                    usr.deleteElement(rubrica,categoria,elementoEli);
+                    Snackbar.make(v, "Eliminado elemento de "+categoria+".", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+                    }
+                })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
-    protected void editElementoDialog(final View v) {
+    protected void nivelesElementoDialog(final View v) {
         // get prompts.xml view
         TextView nombre = (TextView) v.findViewById(R.id.ele_name);
         int positionElemento=0;
@@ -217,7 +244,7 @@ public class SelectCategoriasActivity extends AppCompatActivity {
                         try{
                             sumapesos = sumapesos + Integer.parseInt(editNum.getText().toString());
                         }catch(Error e){}
-                        if (sumapesos < maxpeso){
+                        if (sumapesos <= maxpeso){
                             Elemento ele = new Elemento(editNum.getText().toString(),editDes.getText().toString(), "Insatisfactorio", "Aceptable", "Satisfactorio", "Ejemplar");
                             // setup a dialog window
                             usr.addElementToCategory(rubrica,categoria,editText.getText().toString(),ele);
@@ -241,5 +268,68 @@ public class SelectCategoriasActivity extends AppCompatActivity {
         // create an alert dialog
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+    public void onEditElemento(final View v){
+        // get elemento seleccionado
+        LinearLayout vi = (LinearLayout) v.getParent().getParent();
+        TextView elem = (TextView) vi.findViewById(R.id.ele_name);
+        int positionElemento=0;
+        for (int i=0;i < elementos.size();i++){
+            if (elem.getText().toString().equals(elementos.get(i))){
+                positionElemento = i;
+                break;
+            }
+        }
+        final ArrayList<String> e = Niveles.get(positionElemento);
+
+        TextView descripcion = (TextView) vi.findViewById(R.id.ele_descrip);
+        TextView peso = (TextView) vi.findViewById(R.id.ele_peso);
+        final String elementoSel = elem.getText().toString();
+        //get view
+        LayoutInflater layoutInflater = LayoutInflater.from(SelectCategoriasActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input_elemento, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectCategoriasActivity.this);
+        alertDialogBuilder.setView(promptView);
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        final EditText editNum = (EditText) promptView.findViewById(R.id.editNumber);
+        final EditText editDes = (EditText) promptView.findViewById(R.id.editdesc);
+        TextView titulo = (TextView) promptView.findViewById(R.id.textView3);
+        titulo.setText("Editar elemento");
+        editText.setText(elem.getText().toString());
+        final String pesoAnt = peso.getText().toString().substring(0,peso.getText().toString().length()-2);
+        editDes.setText(descripcion.getText().toString().substring(2,descripcion.getText().toString().length()));
+        editNum.setText(peso.getText().toString().substring(0,peso.getText().toString().length()-2));
+
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {;
+                        try{
+                            sumapesos = sumapesos - Integer.parseInt(pesoAnt) + Integer.parseInt(editNum.getText().toString());
+                        }catch(Error e){}
+                        if (sumapesos <= maxpeso){
+                            Elemento ele = new Elemento(editNum.getText().toString(),editDes.getText().toString(), e.get(0), e.get(1), e.get(2), e.get(3));
+                            usr.deleteElement(rubrica,categoria,elementoSel);
+                            // setup a dialog window
+                            usr.addElementToCategory(rubrica,categoria,editText.getText().toString(),ele);
+                            Snackbar.make(v, "Editado elemento de "+categoria+".", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                        else{
+                            sumapesos = sumapesos - Integer.parseInt(editNum.getText().toString());
+                            Snackbar.make(v, "Peso no puede ser mayor a "+maxpeso+"%", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();;
     }
 }

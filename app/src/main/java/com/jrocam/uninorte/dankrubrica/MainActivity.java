@@ -96,5 +96,10 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    public void onRubrica(View v){
+        startActivity(new Intent(this,RubricaActivity.class));
+    }
+    public void onAsignatura(View v){
+        startActivity(new Intent(this,AsignaturaActivity.class));
+    }
 }

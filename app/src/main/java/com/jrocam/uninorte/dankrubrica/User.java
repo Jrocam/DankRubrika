@@ -53,10 +53,32 @@ public class User implements Serializable {
         Categoria category = new Categoria(peso);
         myRef.setValue(category);
     }
+    public void editPesoCategory(String rubricName, String categoryName, String peso){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+ rubricName +"/"+categoryName+"/"+"peso"+"/");
+        //Instancia Categoria
+        myRef.setValue(peso);
+    }
+    public void deleteCategory(String rubricName, String categoryName){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+ rubricName +"/"+categoryName+"/");
+        //Instancia Categoria
+        myRef.removeValue();
+    }
     public void addElementToCategory(String rubricName, String categoryName, String elementName,Elemento elemento){ //elemento[6]: Nombre+peso+L1+L2+L3+L4
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+rubricName+"/"+categoryName+"/"+elementName+"/");
         myRef.setValue(elemento);
+    }
+    public void deleteElement(String rubricName, String categoryName, String elementName){ //elemento[6]: Nombre+peso+L1+L2+L3+L4
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/rubrics/"+rubricName+"/"+categoryName+"/"+elementName+"/");
+        myRef.removeValue();
+    }
+    public void gradeStudent( String className, String exam, String student, String grade){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users/"+this.username+"/class/"+className+"/grades/"+exam);
+        myRef.child(student).setValue(grade);
     }
 }
 

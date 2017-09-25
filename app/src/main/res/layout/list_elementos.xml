@@ -2,6 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_padre"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -13,21 +15,20 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:visibility="visible"
         android:onClick="onElementos"
+        android:visibility="visible"
         app:cardElevation="1dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.40"
+                android:layout_weight="0.30"
                 android:orientation="vertical">
 
                 <TextView
@@ -37,10 +38,10 @@
                     android:layout_weight="1"
                     android:elegantTextHeight="true"
                     android:paddingBottom="4dp"
-                    android:paddingTop="8dp"
-                    android:text="TextView"
                     android:paddingLeft="16dp"
                     android:paddingRight="2dp"
+                    android:paddingTop="8dp"
+                    android:text="TextView"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -57,14 +58,68 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/ele_peso"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.60"
-                android:gravity="center"
-                android:text="TextView"
-                android:textAlignment="center" />
+                android:layout_weight="0.50"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ele_peso"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.50"
+                android:orientation="horizontal">
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.50"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="onEditElemento"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/btn_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center"
+                        android:background="@drawable/ic_edit"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.50"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="onDelete"
+                    android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/btn_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|center"
+                            android:background="@drawable/ic_delete"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
 
         </LinearLayout>
 

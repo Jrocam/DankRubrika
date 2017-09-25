@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
      */
     private ViewPager mViewPager;
     private DatabaseReference myRef;
+    private static DatabaseReference myRef2;
     public String asignatura;
     public String[] alumnos = {"sin alumnos"};
     public String[] examenes = {"sin examenes"};
@@ -86,6 +88,10 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //FIREBASE
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef2 = database.getReference();
 
     }
     @Override
@@ -330,7 +336,6 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Log.d("MENSAJE!", "CLICKED: ");
                         }
-
                     });
                 }
                 FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton2);
@@ -388,10 +393,11 @@ public class SelectAsignaturaActivity extends AsignaturaActivity {
         }
     }
 
-    /**
+/**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {

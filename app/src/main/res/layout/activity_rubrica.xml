@@ -35,8 +35,8 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
-                    app:layout_collapseMode="parallax"
-                    android:src="@drawable/img_emptyboard"
+                app:layout_collapseMode="parallax"
+                android:src="@drawable/img_emptyboard"
                     android:contentDescription="@string/app_name"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"

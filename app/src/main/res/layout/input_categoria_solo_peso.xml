@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -14,7 +15,7 @@
         android:fontFamily="sans-serif-smallcaps"
 
         android:paddingLeft="8dp"
-        android:text="Agregar alumno"
+        android:text="Añadir categoría"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -31,15 +32,31 @@
         android:layout_marginTop="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:text="Nombre:"
+        android:text="Categoría:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:text="Peso ( % )"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/edittext"
+        android:id="@+id/editNumber"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:hint="John Doe.." />
+        android:layout_marginLeft="128dp"
+        android:layout_marginRight="128dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:hint="45.."/>
+
 
 </LinearLayout>

@@ -67,7 +67,7 @@ public class SelectRubricaActivity extends RubricaActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (sumapesos < 100){
+                if (sumapesos <= 100){
                     onAddCategoria(view);
                 }else{
                     Snackbar.make(view, "Peso no puede ser mayor a 100%", Snackbar.LENGTH_LONG)
@@ -161,14 +161,14 @@ public class SelectRubricaActivity extends RubricaActivity {
                         try{
                             sumapesos = sumapesos + Integer.parseInt(editNum.getText().toString());
                         }catch(Error e){}
-                        if (sumapesos < 100){
+                        if (sumapesos <= 100){
                             usr.addCategoryToRubric(rubrica,editText.getText().toString(),editNum.getText().toString());
                             Snackbar.make(v, "Añadida nueva categoría", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         }
                         else{
                             sumapesos = sumapesos - Integer.parseInt(editNum.getText().toString());
-                            Snackbar.make(v, "Peso mayor a 100%", Snackbar.LENGTH_LONG)
+                            Snackbar.make(v, "Peso no puede ser mayor a 100%", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         }
                     }
@@ -183,5 +183,83 @@ public class SelectRubricaActivity extends RubricaActivity {
         // create an alert dialog
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+    public void onDeleteCategoria(final View v){
+        LayoutInflater layoutInflater = LayoutInflater.from(SelectRubricaActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input_alerta, null);
+        LinearLayout vi = (LinearLayout) v.getParent().getParent();
+        TextView elem = (TextView) vi.findViewById(R.id.cat_name);
+        final String categoriaEli = elem.getText().toString();
+        TextView texto = (TextView) promptView.findViewById(R.id.textView);
+        texto.setText("¿Seguro que deseas eliminar esta categoría y todos sus elementos?");
+        Log.d("Msg", "Category SELECT IS: " +categoriaEli);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectRubricaActivity.this);
+        alertDialogBuilder.setView(promptView);
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {;
+                        usr.deleteCategory(rubrica,categoriaEli);
+                        Snackbar.make(v, "Eliminada categoría de "+rubrica+".", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+    public void onEditCategoria( final View v){
+        // get elemento seleccionado
+        LinearLayout vi = (LinearLayout) v.getParent().getParent();
+        TextView cat = (TextView) vi.findViewById(R.id.cat_name);
+        TextView peso = (TextView) vi.findViewById(R.id.cat_peso);
+        final String catSel = cat.getText().toString();
+        //get view
+        LayoutInflater layoutInflater = LayoutInflater.from(SelectRubricaActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input_categoria_solo_peso, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectRubricaActivity.this);
+        alertDialogBuilder.setView(promptView);
+        final EditText editNum = (EditText) promptView.findViewById(R.id.editNumber);
+        TextView categoria = (TextView) promptView.findViewById(R.id.textView);
+        categoria.setText(catSel);
+        TextView titulo = (TextView) promptView.findViewById(R.id.textView3);
+        titulo.setText("Editar peso de categoría");
+        final String pesoAnt = peso.getText().toString().substring(0,peso.getText().toString().length()-2);
+        editNum.setText(peso.getText().toString().substring(0,peso.getText().toString().length()-2));
+
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {;
+                        try{
+                            sumapesos = sumapesos - Integer.parseInt(pesoAnt) + Integer.parseInt(editNum.getText().toString());
+                        }catch(Error e){}
+                        if (sumapesos <= 100){
+                            usr.editPesoCategory(rubrica,catSel,editNum.getText().toString());
+                            Snackbar.make(v, "Editada categoría de "+rubrica+".", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                        else{
+                            sumapesos = sumapesos - Integer.parseInt(editNum.getText().toString());
+                            Snackbar.make(v, "Peso no puede ser mayor a 100%", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancelar",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();;
     }
 }
